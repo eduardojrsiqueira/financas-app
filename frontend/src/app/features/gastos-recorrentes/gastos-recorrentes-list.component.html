@@ -1,0 +1,43 @@
+<div class="app-page-header">
+  <h1>Gastos Recorrentes</h1>
+  <button mat-flat-button color="primary" (click)="novo()">
+    <mat-icon>add</mat-icon>
+    Novo Gasto Recorrente
+  </button>
+</div>
+
+<div class="app-loading" *ngIf="carregando">
+  <mat-spinner diameter="40"></mat-spinner>
+</div>
+
+<div class="app-empty-state" *ngIf="!carregando && gastos.length === 0">
+  <mat-icon>autorenew</mat-icon>
+  <span>Nenhum gasto recorrente cadastrado ainda.</span>
+</div>
+
+<table mat-table [dataSource]="gastos" class="app-table mat-elevation-z1" *ngIf="!carregando && gastos.length > 0">
+  <ng-container matColumnDef="nome">
+    <th mat-header-cell *matHeaderCellDef>Nome</th>
+    <td mat-cell *matCellDef="let gasto">{{ gasto.nome }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="categoriaNome">
+    <th mat-header-cell *matHeaderCellDef>Categoria</th>
+    <td mat-cell *matCellDef="let gasto">{{ gasto.categoriaNome }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="acoes">
+    <th mat-header-cell *matHeaderCellDef class="app-col-acoes">Ações</th>
+    <td mat-cell *matCellDef="let gasto" class="app-col-acoes">
+      <button mat-icon-button matTooltip="Ver lançamentos" (click)="verLancamentos(gasto)">
+        <mat-icon>receipt_long</mat-icon>
+      </button>
+      <button mat-icon-button matTooltip="Excluir" (click)="excluir(gasto)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>

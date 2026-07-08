@@ -1,0 +1,22 @@
+<h2 mat-dialog-title>{{ data.titulo }}</h2>
+
+<form [formGroup]="form" (ngSubmit)="confirmar()">
+  <mat-dialog-content class="app-form-dialog app-duplicar-dialog">
+    <label class="app-field-label">Mês inicial</label>
+    <app-mes-ano-picker formControlName="mesInicial"></app-mes-ano-picker>
+
+    <mat-form-field appearance="outline" class="app-form-field">
+      <mat-label>Quantidade de meses</mat-label>
+      <input matInput type="number" min="1" max="24" formControlName="quantidadeMeses" />
+      <mat-hint>Cria um registro igual a cada mês, a partir do mês inicial.</mat-hint>
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" mat-dialog-close>Cancelar</button>
+    <button mat-flat-button color="primary" type="submit">
+      <mat-icon>content_copy</mat-icon>
+      Duplicar
+    </button>
+  </mat-dialog-actions>
+</form>

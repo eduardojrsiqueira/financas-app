@@ -1,0 +1,83 @@
+<div class="app-page-header">
+  <h1>Dashboard — {{ mesFormatado }}</h1>
+  <app-mes-ano-picker [(ngModel)]="mesSelecionado" (ngModelChange)="onMesChange()"></app-mes-ano-picker>
+</div>
+
+<div class="app-loading" *ngIf="carregando">
+  <mat-spinner diameter="40"></mat-spinner>
+</div>
+
+<div class="app-dashboard-grid" *ngIf="!carregando">
+  <mat-card class="app-summary-card app-summary-card--receitas">
+    <mat-icon>trending_up</mat-icon>
+    <div>
+      <span class="app-summary-card__label">Receitas do mês</span>
+      <span class="app-summary-card__valor">{{ totalReceitas | currency: 'BRL' }}</span>
+    </div>
+  </mat-card>
+
+  <mat-card class="app-summary-card app-summary-card--despesas">
+    <mat-icon>trending_down</mat-icon>
+    <div>
+      <span class="app-summary-card__label">Despesas do mês</span>
+      <span class="app-summary-card__valor">{{ totalDespesas | currency: 'BRL' }}</span>
+    </div>
+  </mat-card>
+
+  <mat-card
+    class="app-summary-card"
+    [class.app-summary-card--positivo]="saldo >= 0"
+    [class.app-summary-card--negativo]="saldo < 0"
+  >
+    <mat-icon>account_balance_wallet</mat-icon>
+    <div class="app-summary-card__compartilhado">
+      <span class="app-summary-card__label">Saldo do mês</span>
+      <span class="app-summary-card__valor">{{ saldo | currency: 'BRL' }}</span>
+      <div class="app-summary-card__detalhes">
+        <span>Inclui saldo compartilhado: {{ saldoCompartilhado | currency: 'BRL' }}</span>
+      </div>
+    </div>
+  </mat-card>
+
+  <mat-card class="app-summary-card app-summary-card--cartoes">
+    <mat-icon>credit_card</mat-icon>
+    <div class="app-summary-card__compartilhado">
+      <span class="app-summary-card__label">Total em cartões</span>
+      <span class="app-summary-card__valor">{{ totalCartoes | currency: 'BRL' }}</span>
+      <div class="app-summary-card__detalhes" *ngIf="cartoesBreakdown.length > 0">
+        <span *ngFor="let item of cartoesBreakdown">{{ item.cartaoNome }}: {{ item.total | currency: 'BRL' }}</span>
+      </div>
+    </div>
+  </mat-card>
+
+  <mat-card class="app-summary-card app-summary-card--recorrentes">
+    <mat-icon>autorenew</mat-icon>
+    <div class="app-summary-card__compartilhado">
+      <span class="app-summary-card__label">Gastos recorrentes do mês</span>
+      <span class="app-summary-card__valor">{{ totalGastosRecorrentes | currency: 'BRL' }}</span>
+      <div class="app-summary-card__detalhes">
+        <span>Pago: {{ gastosRecorrentesPago | currency: 'BRL' }}</span>
+        <span>Pendente: {{ gastosRecorrentesPendente | currency: 'BRL' }}</span>
+      </div>
+    </div>
+  </mat-card>
+
+  <mat-card class="app-summary-card app-summary-card--compartilhado">
+    <mat-icon>people</mat-icon>
+    <div class="app-summary-card__compartilhado">
+      <span class="app-summary-card__label">Contas compartilhadas pendentes</span>
+      <span class="app-summary-card__valor">{{ totalPendenteCompartilhado | currency: 'BRL' }}</span>
+      <div class="app-summary-card__detalhes">
+        <span>Você deve: {{ pendenteEuParaEla | currency: 'BRL' }}</span>
+        <span>Devem a você: {{ pendenteElaParaEu | currency: 'BRL' }}</span>
+        <span
+          class="app-summary-card__saldo-linha"
+          [class.app-summary-card__saldo-linha--positivo]="saldoCompartilhado >= 0"
+          [class.app-summary-card__saldo-linha--negativo]="saldoCompartilhado < 0"
+        >
+          Saldo: {{ saldoCompartilhado | currency: 'BRL' }}
+        </span>
+      </div>
+    </div>
+  </mat-card>
+</div>

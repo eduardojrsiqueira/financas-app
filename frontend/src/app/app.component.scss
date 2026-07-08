@@ -1,0 +1,44 @@
+.app-shell {
+  height: 100vh;
+}
+
+.app-sidenav {
+  width: 260px;
+  border-right: none;
+}
+
+.app-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.25rem 1rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #3f51b5;
+}
+
+.app-nav-link--active {
+  background: rgba(63, 81, 181, 0.08);
+  color: #3f51b5;
+
+  mat-icon {
+    color: #3f51b5;
+  }
+}
+
+.app-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
+  &__title {
+    margin-left: 0.5rem;
+    font-weight: 500;
+  }
+}
+
+.app-content {
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}

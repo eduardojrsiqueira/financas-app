@@ -1,0 +1,17 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: financas-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: financas
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: financas
+      MYSQL_PASSWORD: financas
+    ports:
+      - "3306:3306"
+    volumes:
+      - financas-mysql-data:/var/lib/mysql
+
+volumes:
+  financas-mysql-data:

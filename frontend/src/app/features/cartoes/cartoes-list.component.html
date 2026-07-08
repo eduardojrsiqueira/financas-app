@@ -1,0 +1,53 @@
+<div class="app-page-header">
+  <h1>Cartões</h1>
+  <button mat-flat-button color="primary" (click)="novo()">
+    <mat-icon>add</mat-icon>
+    Novo Cartão
+  </button>
+</div>
+
+<div class="app-loading" *ngIf="carregando">
+  <mat-spinner diameter="40"></mat-spinner>
+</div>
+
+<div class="app-empty-state" *ngIf="!carregando && cartoes.length === 0">
+  <mat-icon>credit_card</mat-icon>
+  <span>Nenhum cartão cadastrado ainda.</span>
+</div>
+
+<table mat-table [dataSource]="cartoes" class="app-table mat-elevation-z1" *ngIf="!carregando && cartoes.length > 0">
+  <ng-container matColumnDef="nome">
+    <th mat-header-cell *matHeaderCellDef>Nome</th>
+    <td mat-cell *matCellDef="let cartao">{{ cartao.nome }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="bandeira">
+    <th mat-header-cell *matHeaderCellDef>Bandeira</th>
+    <td mat-cell *matCellDef="let cartao">{{ cartao.bandeira || '—' }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="diaFechamento">
+    <th mat-header-cell *matHeaderCellDef>Fechamento</th>
+    <td mat-cell *matCellDef="let cartao">Dia {{ cartao.diaFechamento }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="diaVencimento">
+    <th mat-header-cell *matHeaderCellDef>Vencimento</th>
+    <td mat-cell *matCellDef="let cartao">Dia {{ cartao.diaVencimento }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="acoes">
+    <th mat-header-cell *matHeaderCellDef class="app-col-acoes">Ações</th>
+    <td mat-cell *matCellDef="let cartao" class="app-col-acoes">
+      <button mat-icon-button matTooltip="Editar" (click)="editar(cartao)">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button matTooltip="Excluir" (click)="excluir(cartao)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>

@@ -1,0 +1,325 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.app-form-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 320px;
+}
+
+.app-form-field {
+  width: 100%;
+}
+
+.app-field-label {
+  font-size: 0.75rem;
+  color: rgba(0, 0, 0, 0.6);
+  margin-top: 0.25rem;
+}
+
+.app-duplicar-dialog {
+  padding-top: 0.5rem;
+
+  > * {
+    display: block;
+    margin-bottom: 1.5rem;
+  }
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
+
+  .app-field-label {
+    margin-top: 0;
+  }
+}
+
+.app-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+}
+
+.app-page-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.app-table-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.app-table {
+  width: 100%;
+}
+
+.app-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 3rem 1rem;
+  color: rgba(0, 0, 0, 0.54);
+
+  mat-icon {
+    font-size: 2.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
+.app-loading {
+  display: flex;
+  justify-content: center;
+  padding: 3rem;
+}
+
+th.app-col-acoes,
+td.app-col-acoes {
+  width: 200px;
+  min-width: 200px;
+  white-space: nowrap;
+  text-align: right;
+}
+
+.app-filter-toggle {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.app-chip--quitado {
+  --mdc-chip-elevated-container-color: #e6f4ea;
+  --mdc-chip-label-text-color: #1e7e34;
+}
+
+.app-chip--pendente {
+  --mdc-chip-elevated-container-color: #fdecea;
+  --mdc-chip-label-text-color: #b3261e;
+}
+
+.app-lancamentos-dialog {
+  min-width: 760px;
+  max-width: 100%;
+}
+
+.app-lancamento-form {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+
+  app-mes-ano-picker {
+    flex: 2;
+    min-width: 220px;
+  }
+
+  mat-form-field {
+    flex: 1;
+    min-width: 140px;
+  }
+
+  button {
+    margin-top: 4px;
+  }
+}
+
+.app-cartao-grupos {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.app-cartao-grupo__header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+
+  mat-icon {
+    color: rgba(0, 0, 0, 0.5);
+  }
+}
+
+.app-cartao-grupo__nome {
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.app-cartao-grupo__total {
+  margin-left: auto;
+  font-weight: 600;
+  color: #3f51b5;
+}
+
+.app-compras-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.app-compra-card {
+  background: #fff;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.app-compra-card__header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 0.85rem 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+}
+
+.app-compra-card__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+
+  span {
+    font-size: 0.8rem;
+    color: rgba(0, 0, 0, 0.6);
+  }
+}
+
+.app-compra-card__valor {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.15rem;
+  font-weight: 500;
+}
+
+.app-compra-card__parcelas {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.app-parcelas-table {
+  background: #fafafa;
+}
+
+.app-parcela-row--atual {
+  font-weight: 600;
+  background: rgba(63, 81, 181, 0.08);
+}
+
+.app-dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.app-summary-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem !important;
+
+  mat-icon {
+    font-size: 2.25rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    color: rgba(0, 0, 0, 0.4);
+  }
+}
+
+.app-summary-card__label {
+  display: block;
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.app-summary-card__valor {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.app-summary-card__detalhes {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.75rem;
+  color: rgba(0, 0, 0, 0.6);
+  margin-top: 0.25rem;
+}
+
+.app-summary-card__saldo-linha {
+  font-weight: 600;
+  margin-top: 0.15rem;
+}
+
+.app-summary-card__saldo-linha--positivo {
+  color: #1e7e34;
+}
+
+.app-summary-card__saldo-linha--negativo {
+  color: #b3261e;
+}
+
+.app-valor--positivo {
+  color: #1e7e34;
+  font-weight: 600;
+}
+
+.app-valor--negativo {
+  color: #b3261e;
+  font-weight: 600;
+}
+
+.app-summary-card--receitas mat-icon {
+  color: #1e7e34;
+}
+
+.app-summary-card--despesas mat-icon {
+  color: #b3261e;
+}
+
+.app-summary-card--positivo .app-summary-card__valor {
+  color: #1e7e34;
+}
+
+.app-summary-card--negativo .app-summary-card__valor {
+  color: #b3261e;
+}
+
+.app-summary-card--compartilhado mat-icon {
+  color: #3f51b5;
+}
+
+.app-summary-card--cartoes mat-icon {
+  color: #f9a825;
+}
+
+.app-summary-card--recorrentes mat-icon {
+  color: #00897b;
+}
+
+.app-snackbar--erro {
+  --mdc-snackbar-container-color: #b3261e;
+  --mdc-snackbar-supporting-text-color: #fff;
+}

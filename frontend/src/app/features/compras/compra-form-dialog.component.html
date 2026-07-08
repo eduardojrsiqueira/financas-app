@@ -1,0 +1,50 @@
+<h2 mat-dialog-title>Nova Compra</h2>
+
+<form [formGroup]="form" (ngSubmit)="salvar()">
+  <mat-dialog-content class="app-form-dialog">
+    <mat-form-field appearance="outline" class="app-form-field">
+      <mat-label>Cartão</mat-label>
+      <mat-select formControlName="cartaoId">
+        <mat-option *ngFor="let cartao of cartoes" [value]="cartao.id">{{ cartao.nome }}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.controls.cartaoId.hasError('required')">Selecione o cartão</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="app-form-field">
+      <mat-label>Categoria</mat-label>
+      <mat-select formControlName="categoriaId">
+        <mat-option *ngFor="let categoria of categorias" [value]="categoria.id">{{ categoria.nome }}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.controls.categoriaId.hasError('required')">Selecione a categoria</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="app-form-field">
+      <mat-label>Descrição</mat-label>
+      <input matInput formControlName="descricao" maxlength="255" />
+      <mat-error *ngIf="form.controls.descricao.hasError('required')">Informe a descrição</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="app-form-field">
+      <mat-label>Valor total</mat-label>
+      <span matTextPrefix>R$&nbsp;</span>
+      <input matInput type="number" step="0.01" min="0.01" formControlName="valorTotal" />
+      <mat-error *ngIf="form.controls.valorTotal.hasError('required')">Informe o valor</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="app-form-field">
+      <mat-label>Data da compra</mat-label>
+      <input matInput type="date" formControlName="dataCompra" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="app-form-field">
+      <mat-label>Número de parcelas</mat-label>
+      <input matInput type="number" min="1" formControlName="numeroParcelas" />
+      <mat-error *ngIf="form.controls.numeroParcelas.hasError('required')">Informe o número de parcelas</mat-error>
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" mat-dialog-close>Cancelar</button>
+    <button mat-flat-button color="primary" type="submit">Salvar</button>
+  </mat-dialog-actions>
+</form>

@@ -1,0 +1,15 @@
+<div class="app-mes-ano-picker">
+  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+    <mat-label>Mês</mat-label>
+    <mat-select [(ngModel)]="mes" [disabled]="disabled" (selectionChange)="emitir()">
+      <mat-option *ngFor="let item of meses" [value]="item.valor">{{ item.nome }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+    <mat-label>Ano</mat-label>
+    <mat-select [(ngModel)]="ano" [disabled]="disabled" (selectionChange)="emitir()">
+      <mat-option *ngFor="let item of anos" [value]="item">{{ item }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
