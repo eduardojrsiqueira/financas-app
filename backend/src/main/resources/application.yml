@@ -31,4 +31,10 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
+app:
+  jwt:
+    secret: ef55760b00a07032766cde5f5fcbdff12485521d7e9a191fe8ed29867dee73d8
+    expiracao-ms: 604800000 # 7 dias
+
 # Fallback para rotas do Angular (SPA) tratado via SpaController.java
+# $2a$10$HukGmJwkbWtZsxOXqJ0hh.m31BwmqRPQlWDoc2JTgLdSUp0FT5iuC - 123456

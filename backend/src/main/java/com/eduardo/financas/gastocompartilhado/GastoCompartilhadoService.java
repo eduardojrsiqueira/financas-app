@@ -1,5 +1,6 @@
 package com.eduardo.financas.gastocompartilhado;
 
+import com.eduardo.financas.security.UsuarioContexto;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,35 +15,41 @@ import java.util.List;
 public class GastoCompartilhadoService {
 
     private final GastoCompartilhadoRepository gastoCompartilhadoRepository;
+    private final UsuarioContexto usuarioContexto;
 
-    public GastoCompartilhadoService(GastoCompartilhadoRepository gastoCompartilhadoRepository) {
+    public GastoCompartilhadoService(GastoCompartilhadoRepository gastoCompartilhadoRepository,
+                                      UsuarioContexto usuarioContexto) {
         this.gastoCompartilhadoRepository = gastoCompartilhadoRepository;
+        this.usuarioContexto = usuarioContexto;
     }
 
     @Transactional(readOnly = true)
     public List<GastoCompartilhado> listar(YearMonth mesReferencia, boolean apenasPendentes) {
+        Long usuarioId = usuarioContexto.idUsuarioAtual();
         if (mesReferencia != null && apenasPendentes) {
-            return gastoCompartilhadoRepository.findByMesReferenciaAndQuitadoFalse(mesReferencia);
+            return gastoCompartilhadoRepository.findByUsuarioIdAndMesReferenciaAndQuitadoFalse(usuarioId,
+                    mesReferencia);
         }
         if (mesReferencia != null) {
-            return gastoCompartilhadoRepository.findByMesReferencia(mesReferencia);
+            return gastoCompartilhadoRepository.findByUsuarioIdAndMesReferencia(usuarioId, mesReferencia);
         }
         if (apenasPendentes) {
-            return gastoCompartilhadoRepository.findByQuitadoFalse();
+            return gastoCompartilhadoRepository.findByUsuarioIdAndQuitadoFalse(usuarioId);
         }
-        return gastoCompartilhadoRepository.findAll();
+        return gastoCompartilhadoRepository.findByUsuarioId(usuarioId);
     }
 
     @Transactional(readOnly = true)
     public GastoCompartilhado buscarPorId(Long id) {
-        return gastoCompartilhadoRepository.findById(id)
+        return gastoCompartilhadoRepository.findByIdAndUsuarioId(id, usuarioContexto.idUsuarioAtual())
                 .orElseThrow(() -> new EntityNotFoundException("Gasto compartilhado não encontrado: " + id));
     }
 
     public GastoCompartilhado criar(String descricao, BigDecimal valor, LocalDate data, DirecaoGasto direcao,
                                      YearMonth mesReferencia) {
-        return gastoCompartilhadoRepository.save(
-                new GastoCompartilhado(descricao, valor, data, direcao, mesReferencia));
+        GastoCompartilhado gasto = new GastoCompartilhado(usuarioContexto.referenciaUsuarioAtual(), descricao, valor,
+                data, direcao, mesReferencia);
+        return gastoCompartilhadoRepository.save(gasto);
     }
 
     public GastoCompartilhado atualizar(Long id, String descricao, BigDecimal valor, LocalDate data,
@@ -63,9 +70,6 @@ public class GastoCompartilhadoService {
     }
 
     public void deletar(Long id) {
-        if (!gastoCompartilhadoRepository.existsById(id)) {
-            throw new EntityNotFoundException("Gasto compartilhado não encontrado: " + id);
-        }
-        gastoCompartilhadoRepository.deleteById(id);
+        gastoCompartilhadoRepository.delete(buscarPorId(id));
     }
 }

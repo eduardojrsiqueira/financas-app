@@ -2,6 +2,7 @@ package com.eduardo.financas.compra;
 
 import com.eduardo.financas.cartao.Cartao;
 import com.eduardo.financas.categoria.Categoria;
+import com.eduardo.financas.usuario.Usuario;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,6 +34,10 @@ public class Compra {
     private Long id;
 
     @ManyToOne(optional = false)
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
+
+    @ManyToOne(optional = false)
     @JoinColumn(name = "cartao_id", nullable = false)
     private Cartao cartao;
 
@@ -55,8 +60,9 @@ public class Compra {
     @OneToMany(mappedBy = "compra", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Parcela> parcelas = new ArrayList<>();
 
-    public Compra(Cartao cartao, Categoria categoria, String descricao, BigDecimal valorTotal,
+    public Compra(Usuario usuario, Cartao cartao, Categoria categoria, String descricao, BigDecimal valorTotal,
                   LocalDate dataCompra, Integer numeroParcelas) {
+        this.usuario = usuario;
         this.cartao = cartao;
         this.categoria = categoria;
         this.descricao = descricao;

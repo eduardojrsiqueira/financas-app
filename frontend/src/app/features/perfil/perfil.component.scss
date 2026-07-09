@@ -1,0 +1,14 @@
+.app-perfil-card {
+  max-width: 420px;
+  padding: 1.5rem !important;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+.app-form-field {
+  width: 100%;
+}

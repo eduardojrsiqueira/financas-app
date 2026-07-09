@@ -2,6 +2,7 @@ package com.eduardo.financas.gastorecorrente;
 
 import com.eduardo.financas.categoria.Categoria;
 import com.eduardo.financas.categoria.CategoriaRepository;
+import com.eduardo.financas.security.UsuarioContexto;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,46 +18,50 @@ public class GastoRecorrenteService {
     private final GastoRecorrenteRepository gastoRecorrenteRepository;
     private final LancamentoRecorrenteRepository lancamentoRecorrenteRepository;
     private final CategoriaRepository categoriaRepository;
+    private final UsuarioContexto usuarioContexto;
 
     public GastoRecorrenteService(GastoRecorrenteRepository gastoRecorrenteRepository,
                                    LancamentoRecorrenteRepository lancamentoRecorrenteRepository,
-                                   CategoriaRepository categoriaRepository) {
+                                   CategoriaRepository categoriaRepository,
+                                   UsuarioContexto usuarioContexto) {
         this.gastoRecorrenteRepository = gastoRecorrenteRepository;
         this.lancamentoRecorrenteRepository = lancamentoRecorrenteRepository;
         this.categoriaRepository = categoriaRepository;
+        this.usuarioContexto = usuarioContexto;
     }
 
     @Transactional(readOnly = true)
     public List<GastoRecorrente> listar() {
-        return gastoRecorrenteRepository.findAll();
+        return gastoRecorrenteRepository.findByUsuarioId(usuarioContexto.idUsuarioAtual());
     }
 
     @Transactional(readOnly = true)
     public GastoRecorrente buscarPorId(Long id) {
-        return gastoRecorrenteRepository.findById(id)
+        return gastoRecorrenteRepository.findByIdAndUsuarioId(id, usuarioContexto.idUsuarioAtual())
                 .orElseThrow(() -> new EntityNotFoundException("Gasto recorrente não encontrado: " + id));
     }
 
     public GastoRecorrente criar(Long categoriaId, String nome) {
-        Categoria categoria = categoriaRepository.findById(categoriaId)
+        Long usuarioId = usuarioContexto.idUsuarioAtual();
+        Categoria categoria = categoriaRepository.findByIdAndUsuarioId(categoriaId, usuarioId)
                 .orElseThrow(() -> new EntityNotFoundException("Categoria não encontrada: " + categoriaId));
-        return gastoRecorrenteRepository.save(new GastoRecorrente(categoria, nome));
+        return gastoRecorrenteRepository.save(
+                new GastoRecorrente(usuarioContexto.referenciaUsuarioAtual(), categoria, nome));
     }
 
     public void deletar(Long id) {
-        if (!gastoRecorrenteRepository.existsById(id)) {
-            throw new EntityNotFoundException("Gasto recorrente não encontrado: " + id);
-        }
-        gastoRecorrenteRepository.deleteById(id);
+        gastoRecorrenteRepository.delete(buscarPorId(id));
     }
 
     @Transactional(readOnly = true)
     public List<LancamentoRecorrente> listarLancamentosPorMes(YearMonth mesReferencia) {
-        return lancamentoRecorrenteRepository.findByMesReferencia(mesReferencia);
+        return lancamentoRecorrenteRepository.findByMesReferenciaEUsuario(mesReferencia,
+                usuarioContexto.idUsuarioAtual());
     }
 
     @Transactional(readOnly = true)
     public List<LancamentoRecorrente> listarLancamentosPorGasto(Long gastoRecorrenteId) {
+        buscarPorId(gastoRecorrenteId);
         return lancamentoRecorrenteRepository.findByGastoRecorrenteId(gastoRecorrenteId);
     }
 
@@ -73,15 +78,13 @@ public class GastoRecorrenteService {
     }
 
     public LancamentoRecorrente marcarComoPago(Long lancamentoId) {
-        LancamentoRecorrente lancamento = lancamentoRecorrenteRepository.findById(lancamentoId)
-                .orElseThrow(() -> new EntityNotFoundException("Lançamento não encontrado: " + lancamentoId));
+        LancamentoRecorrente lancamento = buscarLancamento(lancamentoId);
         lancamento.setPago(true);
         return lancamento;
     }
 
     public LancamentoRecorrente atualizarLancamento(Long lancamentoId, YearMonth mesReferencia, BigDecimal valor) {
-        LancamentoRecorrente lancamento = lancamentoRecorrenteRepository.findById(lancamentoId)
-                .orElseThrow(() -> new EntityNotFoundException("Lançamento não encontrado: " + lancamentoId));
+        LancamentoRecorrente lancamento = buscarLancamento(lancamentoId);
 
         lancamentoRecorrenteRepository
                 .findByGastoRecorrenteIdAndMesReferencia(lancamento.getGastoRecorrente().getId(), mesReferencia)
@@ -97,9 +100,11 @@ public class GastoRecorrenteService {
     }
 
     public void excluirLancamento(Long lancamentoId) {
-        if (!lancamentoRecorrenteRepository.existsById(lancamentoId)) {
-            throw new EntityNotFoundException("Lançamento não encontrado: " + lancamentoId);
-        }
-        lancamentoRecorrenteRepository.deleteById(lancamentoId);
+        lancamentoRecorrenteRepository.delete(buscarLancamento(lancamentoId));
+    }
+
+    private LancamentoRecorrente buscarLancamento(Long lancamentoId) {
+        return lancamentoRecorrenteRepository.findByIdEUsuario(lancamentoId, usuarioContexto.idUsuarioAtual())
+                .orElseThrow(() -> new EntityNotFoundException("Lançamento não encontrado: " + lancamentoId));
     }
 }

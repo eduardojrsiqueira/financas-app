@@ -1,0 +1,35 @@
+<div class="app-page-header">
+  <h1>Meu Perfil</h1>
+</div>
+
+<mat-card class="app-perfil-card">
+  <form [formGroup]="form" (ngSubmit)="salvar()">
+    <mat-form-field appearance="outline" class="app-form-field">
+      <mat-label>Login</mat-label>
+      <input matInput formControlName="login" />
+      <mat-error *ngIf="form.controls.login.hasError('required')">Informe o login</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="app-form-field">
+      <mat-label>E-mail</mat-label>
+      <input matInput type="email" formControlName="email" />
+      <mat-error *ngIf="form.controls.email.hasError('required')">Informe o e-mail</mat-error>
+      <mat-error *ngIf="form.controls.email.hasError('email')">E-mail inválido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="app-form-field">
+      <mat-label>Nova senha (opcional)</mat-label>
+      <input matInput type="password" formControlName="novaSenha" autocomplete="new-password" />
+      <mat-hint>Deixe em branco para manter a senha atual</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="app-form-field">
+      <mat-label>Senha atual</mat-label>
+      <input matInput type="password" formControlName="senhaAtual" autocomplete="current-password" />
+      <mat-error *ngIf="form.controls.senhaAtual.hasError('required')">Informe a senha atual para confirmar</mat-error>
+      <mat-hint>Necessária para confirmar qualquer alteração</mat-hint>
+    </mat-form-field>
+
+    <button mat-flat-button color="primary" type="submit" [disabled]="enviando()">Salvar alterações</button>
+  </form>
+</mat-card>

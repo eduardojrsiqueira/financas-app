@@ -1,0 +1,29 @@
+<div class="app-login-page">
+  <mat-card class="app-login-card">
+    <div class="app-login-brand">
+      <mat-icon>account_balance_wallet</mat-icon>
+      <span>Finanças</span>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="entrar()">
+      <mat-form-field appearance="outline" class="app-form-field">
+        <mat-label>Login</mat-label>
+        <input matInput formControlName="login" autocomplete="username" />
+        <mat-error *ngIf="form.controls.login.hasError('required')">Informe o login</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="app-form-field">
+        <mat-label>Senha</mat-label>
+        <input matInput type="password" formControlName="senha" autocomplete="current-password" />
+        <mat-error *ngIf="form.controls.senha.hasError('required')">Informe a senha</mat-error>
+      </mat-form-field>
+
+      <p class="app-login-erro" *ngIf="erro()">{{ erro() }}</p>
+
+      <button mat-flat-button color="primary" type="submit" class="app-login-botao" [disabled]="enviando()">
+        <mat-spinner *ngIf="enviando()" diameter="20"></mat-spinner>
+        <span *ngIf="!enviando()">Entrar</span>
+      </button>
+    </form>
+  </mat-card>
+</div>

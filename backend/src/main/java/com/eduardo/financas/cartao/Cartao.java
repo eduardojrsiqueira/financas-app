@@ -1,10 +1,13 @@
 package com.eduardo.financas.cartao;
 
+import com.eduardo.financas.usuario.Usuario;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +24,10 @@ public class Cartao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
+
     @Column(nullable = false, length = 100)
     private String nome;
 
@@ -33,7 +40,8 @@ public class Cartao {
     @Column(name = "dia_vencimento", nullable = false)
     private Integer diaVencimento;
 
-    public Cartao(String nome, String bandeira, Integer diaFechamento, Integer diaVencimento) {
+    public Cartao(Usuario usuario, String nome, String bandeira, Integer diaFechamento, Integer diaVencimento) {
+        this.usuario = usuario;
         this.nome = nome;
         this.bandeira = bandeira;
         this.diaFechamento = diaFechamento;

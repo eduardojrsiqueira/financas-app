@@ -4,6 +4,7 @@ import com.eduardo.financas.cartao.Cartao;
 import com.eduardo.financas.cartao.CartaoRepository;
 import com.eduardo.financas.categoria.Categoria;
 import com.eduardo.financas.categoria.CategoriaRepository;
+import com.eduardo.financas.security.UsuarioContexto;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,47 +22,49 @@ public class CompraService {
     private final CompraRepository compraRepository;
     private final CartaoRepository cartaoRepository;
     private final CategoriaRepository categoriaRepository;
+    private final UsuarioContexto usuarioContexto;
 
     public CompraService(CompraRepository compraRepository, CartaoRepository cartaoRepository,
-                          CategoriaRepository categoriaRepository) {
+                          CategoriaRepository categoriaRepository, UsuarioContexto usuarioContexto) {
         this.compraRepository = compraRepository;
         this.cartaoRepository = cartaoRepository;
         this.categoriaRepository = categoriaRepository;
+        this.usuarioContexto = usuarioContexto;
     }
 
     @Transactional(readOnly = true)
     public List<Compra> listar() {
-        return compraRepository.listarComParcelas();
+        return compraRepository.listarComParcelas(usuarioContexto.idUsuarioAtual());
     }
 
     @Transactional(readOnly = true)
     public List<Compra> listarPorCartao(Long cartaoId) {
-        return compraRepository.findByCartaoIdComParcelas(cartaoId);
+        return compraRepository.findByCartaoIdComParcelas(cartaoId, usuarioContexto.idUsuarioAtual());
     }
 
     @Transactional(readOnly = true)
     public Compra buscarPorId(Long id) {
-        return compraRepository.findByIdComParcelas(id)
+        return compraRepository.findByIdComParcelas(id, usuarioContexto.idUsuarioAtual())
                 .orElseThrow(() -> new EntityNotFoundException("Compra não encontrada: " + id));
     }
 
     public Compra criar(Long cartaoId, Long categoriaId, String descricao, BigDecimal valorTotal,
                          LocalDate dataCompra, int numeroParcelas) {
-        Cartao cartao = cartaoRepository.findById(cartaoId)
+        Long usuarioId = usuarioContexto.idUsuarioAtual();
+
+        Cartao cartao = cartaoRepository.findByIdAndUsuarioId(cartaoId, usuarioId)
                 .orElseThrow(() -> new EntityNotFoundException("Cartão não encontrado: " + cartaoId));
-        Categoria categoria = categoriaRepository.findById(categoriaId)
+        Categoria categoria = categoriaRepository.findByIdAndUsuarioId(categoriaId, usuarioId)
                 .orElseThrow(() -> new EntityNotFoundException("Categoria não encontrada: " + categoriaId));
 
-        Compra compra = new Compra(cartao, categoria, descricao, valorTotal, dataCompra, numeroParcelas);
+        Compra compra = new Compra(usuarioContexto.referenciaUsuarioAtual(), cartao, categoria, descricao,
+                valorTotal, dataCompra, numeroParcelas);
         gerarParcelas(compra);
         return compraRepository.save(compra);
     }
 
     public void deletar(Long id) {
-        if (!compraRepository.existsById(id)) {
-            throw new EntityNotFoundException("Compra não encontrada: " + id);
-        }
-        compraRepository.deleteById(id);
+        compraRepository.delete(buscarPorId(id));
     }
 
     private void gerarParcelas(Compra compra) {

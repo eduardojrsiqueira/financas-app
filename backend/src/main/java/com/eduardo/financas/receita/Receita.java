@@ -2,6 +2,7 @@ package com.eduardo.financas.receita;
 
 import com.eduardo.financas.categoria.Categoria;
 import com.eduardo.financas.shared.MesReferenciaConverter;
+import com.eduardo.financas.usuario.Usuario;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -30,6 +31,10 @@ public class Receita {
     private Long id;
 
     @ManyToOne(optional = false)
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
+
+    @ManyToOne(optional = false)
     @JoinColumn(name = "categoria_id", nullable = false)
     private Categoria categoria;
 
@@ -43,7 +48,9 @@ public class Receita {
     @Column(name = "mes_referencia", nullable = false, length = 7)
     private YearMonth mesReferencia;
 
-    public Receita(Categoria categoria, String descricao, BigDecimal valor, YearMonth mesReferencia) {
+    public Receita(Usuario usuario, Categoria categoria, String descricao, BigDecimal valor,
+                    YearMonth mesReferencia) {
+        this.usuario = usuario;
         this.categoria = categoria;
         this.descricao = descricao;
         this.valor = valor;
