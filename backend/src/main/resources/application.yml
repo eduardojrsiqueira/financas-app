@@ -1,14 +1,14 @@
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 spring:
   application:
     name: financas-app
 
   datasource:
-    url: jdbc:mysql://localhost:3306/financas?serverTimezone=America/Sao_Paulo
-    username: financas
-    password: financas
+    url: jdbc:mysql://${MYSQLHOST:localhost}:${MYSQLPORT:3306}/${MYSQLDATABASE:financas}?serverTimezone=America/Sao_Paulo
+    username: ${MYSQLUSER:financas}
+    password: ${MYSQLPASSWORD:financas}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -33,8 +33,15 @@ spring:
 
 app:
   jwt:
-    secret: ef55760b00a07032766cde5f5fcbdff12485521d7e9a191fe8ed29867dee73d8
-    expiracao-ms: 604800000 # 7 dias
+    # Em produção (Railway), defina APP_JWT_SECRET nas variáveis de ambiente do serviço.
+    secret: ${APP_JWT_SECRET:ef55760b00a07032766cde5f5fcbdff12485521d7e9a191fe8ed29867dee73d8}
+    expiracao-ms: ${APP_JWT_EXPIRACAO_MS:604800000} # 7 dias
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
 
 # Fallback para rotas do Angular (SPA) tratado via SpaController.java
 # $2a$10$HukGmJwkbWtZsxOXqJ0hh.m31BwmqRPQlWDoc2JTgLdSUp0FT5iuC - 123456
